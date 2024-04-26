@@ -1,0 +1,4 @@
+**/*.txt
+**/solve
+**/solve-p2
+**/target
