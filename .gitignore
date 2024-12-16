@@ -2,3 +2,5 @@
 **/solve
 **/solve-p2
 **/target
+*.o
+a.out
