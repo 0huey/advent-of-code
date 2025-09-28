@@ -27,17 +27,25 @@ func main() {
 
 	topo := Parse(os.Args[1])
 	peaks := topo.Peaks()
-	score := 0
+	p1_score := 0
 
 	for _, trailhead := range topo.Trailheads() {
 		for _, peak := range peaks {
 			if WalkTrailhead(trailhead, peak, topo) {
-				score++
+				p1_score++
 			}
 		}
 	}
 
-	fmt.Println("Part1:", score)
+	fmt.Println("Part1:", p1_score)
+
+	p2_score := 0
+
+	for _, head := range topo.Trailheads() {
+		p2_score += WalkTrailhead2(head, topo, 0)
+	}
+
+	fmt.Println("Part2:", p2_score)
 }
 
 func WalkTrailhead(head Point, peak Point, topo TopoMap) bool {
@@ -56,6 +64,18 @@ func WalkTrailhead(head Point, peak Point, topo TopoMap) bool {
 	return false
 }
 
+func WalkTrailhead2(head Point, topo TopoMap, peaks int) int {
+	if topo.Height(head) == MAX_HEIGHT {
+		return peaks + 1
+	}
+
+	for _, neigh := range topo.Neighbors(head) {
+		if topo.Height(neigh) == topo.Height(head) + 1 {
+			peaks = WalkTrailhead2(neigh, topo, peaks)
+		}
+	}
+	return peaks
+}
 
 func Parse(filename string) TopoMap {
 	data, err := os.ReadFile(filename)
